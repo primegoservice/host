@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prime Go — Área do cliente</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0a58a8;--dark:#083468;--yel:#ffd500;--bg:#f7f9f8;--card:#fff;--text:#0d2745;--mute:#5a6470;--line:#d6e2f0}
+@media (prefers-color-scheme:dark){:root{--bg:#07182b;--card:#0c2540;--text:#eaf2fb;--mute:#a8b8ca;--line:#1d4372;--blue:#4b93e0}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+[hidden]{display:none!important}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.15rem;text-decoration:none;color:inherit}
+.brand img{width:48px;height:48px;border-radius:12px}
+.btn{display:inline-block;background:var(--yel);color:#083468;font:inherit;font-weight:700;padding:12px 22px;border-radius:999px;border:0;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--text);border:2px solid var(--line)}
+.btn.sm{padding:7px 16px;font-size:.9rem}
+.btn:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.1;font-weight:800;color:var(--blue);margin:0 0 8px}
+h2{font-size:1.4rem;font-weight:800;color:var(--blue);margin:0 0 14px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:24px}
+.auth{max-width:460px;margin:30px auto 60px}
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tabs button{flex:1;padding:10px;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--text);font:inherit;font-weight:600;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+label{display:block;font-weight:600;font-size:.92rem;margin:12px 0 4px}
+input{width:100%;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+.hint{font-size:.83rem;color:var(--mute);margin:6px 0 0}
+.err{color:#c0392b;font-weight:600;font-size:.9rem;min-height:1.3em;margin:12px 0 0}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:start;padding-bottom:50px}
+.item{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}.item b{display:block}.item small{color:var(--mute)}
+.price{font-weight:800;color:var(--blue);white-space:nowrap}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:transparent;color:var(--text);font-weight:700;cursor:pointer}
+.total{font-size:1.3rem;font-weight:800;border-top:2px solid var(--line);margin-top:8px;padding-top:12px}
+.order{border-top:1px solid var(--line);padding:12px 0;font-size:.92rem}
+.tag{background:rgba(255,213,0,.3);border-radius:999px;padding:2px 12px;font-size:.8rem;font-weight:600}
+dialog{border:2px solid var(--line);border-radius:22px;background:var(--card);color:var(--text);max-width:520px;width:calc(100% - 32px);padding:24px}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+textarea{width:100%;height:170px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:.88rem;padding:10px}
+.notice{margin-bottom:22px;border-left:10px solid var(--yel);font-size:.95rem}
+footer{padding:10px 0 40px;text-align:center;font-size:.88rem;color:var(--mute)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+<header><a class="brand" href="index.html"><img src="data:image/jpeg;base64,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" alt="Logo da Prime Go">Prime Go</a>
+<div id="userbar" hidden><span id="hello"></span> <button class="btn ghost sm" id="logout">Sair</button></div></header>
+
+<main>
+<section id="auth" class="auth card">
+<h1>Área do cliente</h1>
+<p class="hint" style="margin-bottom:16px">Entre para montar seu carrinho e acompanhar suas solicitações.</p>
+<div class="tabs" role="tablist"><button role="tab" id="tabIn" aria-selected="true">Entrar</button><button role="tab" id="tabUp" aria-selected="false">Criar conta</button></div>
+<form id="form" novalidate>
+<div id="upOnly" hidden>
+<label for="name">Nome</label><input id="name" autocomplete="name">
+<label for="contact">Telefone, WhatsApp ou Instagram (opcional)</label><input id="contact" placeholder="Se preferir, também falamos por aqui">
+<label for="trainer">Código de treinador (opcional)</label><input id="trainer" inputmode="numeric" placeholder="Para eu te adicionar como amigo no jogo">
+</div>
+<label for="email">E-mail</label><input id="email" type="email" autocomplete="email">
+<label for="pw">Senha</label><input id="pw" type="password" autocomplete="current-password">
+<p class="hint" id="pwHint" hidden>Mínimo de 6 caracteres. Não use a senha do Pokémon GO: este cadastro é só da Prime Go e nunca pedimos a senha do jogo.</p>
+<p class="err" id="err" role="alert"></p>
+<button class="btn" id="submit" type="submit" style="width:100%;margin-top:6px">Entrar</button>
+<p class="hint">Sua conta fica salva neste aparelho e neste navegador.</p>
+</form>
+</section>
+
+<section id="app" hidden>
+<h1>Escolha seus serviços</h1><p class="hint" style="margin:0 0 16px">Monte o carrinho e envie a solicitação por e-mail para a Prime Go.</p><div class="card notice"><b>Importante:</b> enviar uma solicitação não garante a aceitação. Analisamos a demanda e a nossa disponibilidade antes de aceitar cada serviço. Se aceitarmos, respondemos por e-mail com a confirmação e os dados de pagamento por Pix. Nenhum pagamento é feito antes disso.</div>
+<div class="grid">
+<div class="card"><h2>Serviços</h2><div id="catalog"></div></div>
+<div>
+<div class="card" style="margin-bottom:20px"><h2>Carrinho</h2><div id="cart"></div></div>
+<div class="card"><h2>Minhas solicitações</h2><div id="orders"></div></div>
+</div></div>
+</section>
+</main>
+<footer id="foot" hidden></footer></div>
+
+<dialog id="dlg"><h2>Solicitação criada</h2>
+<p class="hint" style="margin-top:0">Envie este resumo por e-mail para a Prime Go. Vamos analisar a demanda e responder por e-mail. Se aceitarmos, enviaremos junto os dados de pagamento por Pix.</p>
+<textarea id="msg" readonly></textarea>
+<div class="actions"><button class="btn" id="copy">Copiar resumo</button><a class="btn" id="mail">Enviar por e-mail</a><button class="btn ghost" id="close">Fechar</button></div>
+</dialog>
+
+<script>
+/* CONFIG: preencha antes de publicar */
+const CFG={EMAIL:'',PHONE:''}; // EMAIL da Prime Go (recebe as solicitações). PHONE: adicionar depois.
+const ITEMS=[
+{id:'raid1',n:'Raid remota (avulsa)',d:'Você me convida e eu entro na raid',p:6},
+{id:'raid5',n:'Pacote 5 raids remotas',d:'R$ 5,00 por raid',p:25},
+{id:'raid10',n:'Pacote 10 raids remotas',d:'R$ 4,50 por raid',p:45},
+{id:'bat',n:'Batalha de amigo',d:'Para missão ou pesquisa',p:3},
+{id:'troca',n:'Troca assistida',d:'Poeira Estelar por conta do cliente',p:4},
+{id:'amz',n:'Amizade diária (mensal)',d:'Presente e interação todos os dias',p:15}];
+/* Atenção: contas e pedidos ficam no localStorage do navegador do cliente (sem servidor). */
+const $=id=>document.getElementById(id);
+const money=v=>'R$ '+v.toFixed(2).replace('.',',');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let mode='in',user=null,cart={};
+async function hash(pw,salt){const b=new TextEncoder().encode(salt+pw);const h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function setMode(m){mode=m;$('tabIn').setAttribute('aria-selected',m==='in');$('tabUp').setAttribute('aria-selected',m==='up');
+$('upOnly').hidden=m==='in';$('pwHint').hidden=m==='in';$('submit').textContent=m==='in'?'Entrar':'Criar conta';$('err').textContent='';
+$('pw').autocomplete=m==='in'?'current-password':'new-password'}
+$('tabIn').onclick=()=>setMode('in');$('tabUp').onclick=()=>setMode('up');
+$('form').addEventListener('submit',async e=>{e.preventDefault();$('err').textContent='';
+const email=$('email').value.trim().toLowerCase(),pw=$('pw').value;
+if(!/^\S+@\S+\.\S+$/.test(email))return $('err').textContent='Digite um e-mail válido.';
+if(pw.length<6)return $('err').textContent='A senha precisa ter pelo menos 6 caracteres.';
+if(!window.crypto||!crypto.subtle)return $('err').textContent='Abra o site por https (GitHub Pages) para criar a conta.';
+const users=ls.get('pg_users',{});
+if(mode==='up'){const name=$('name').value.trim(),contact=$('contact').value.trim();
+if(!name)return $('err').textContent='Informe seu nome.';
+if(users[email])return $('err').textContent='Este e-mail já tem conta. Use a aba Entrar.';
+const salt=[...crypto.getRandomValues(new Uint8Array(8))].map(x=>x.toString(16)).join('');
+users[email]={name,contact,trainer:$('trainer').value.trim(),salt,h:await hash(pw,salt)};ls.set('pg_users',users);start(email)}
+else{const u=users[email];if(!u||u.h!==await hash(pw,u.salt))return $('err').textContent='E-mail ou senha incorretos.';start(email)}});
+function start(email){user=Object.assign({email},ls.get('pg_users',{})[email]);ls.set('pg_session',email);cart=ls.get('pg_cart_'+email,{});
+$('auth').hidden=true;$('app').hidden=false;$('userbar').hidden=false;$('hello').textContent='Olá, '+user.name.split(' ')[0]+'!';$('form').reset();render()}
+$('logout').onclick=()=>{ls.set('pg_session',null);user=null;$('app').hidden=true;$('userbar').hidden=true;$('auth').hidden=false;setMode('in')};
+function change(id,d){cart[id]=Math.max(0,(cart[id]||0)+d);if(!cart[id])delete cart[id];ls.set('pg_cart_'+user.email,cart);render()}
+function render(){
+$('catalog').innerHTML=ITEMS.map(i=>`<div class="item"><div><b>${i.n}</b><small>${i.d}</small></div><div><div class="price">${money(i.p)}</div><button class="btn sm" data-add="${i.id}" style="margin-top:6px">Adicionar</button></div></div>`).join('');
+const lines=Object.keys(cart).map(id=>({i:ITEMS.find(x=>x.id===id),q:cart[id]})).filter(l=>l.i);
+const total=lines.reduce((s,l)=>s+l.i.p*l.q,0);
+$('cart').innerHTML=lines.length?lines.map(l=>`<div class="row"><span>${l.i.n}</span><span class="qty"><button data-dec="${l.i.id}" aria-label="Diminuir">−</button>${l.q}<button data-inc="${l.i.id}" aria-label="Aumentar">+</button></span></div>`).join('')+`<div class="row total"><span>Total</span><span>${money(total)}</span></div><button class="btn" id="checkout" style="width:100%;margin-top:14px">Enviar solicitação</button>`:'<p class="hint">Seu carrinho está vazio. Adicione um serviço ao lado.</p>';
+const os=ls.get('pg_orders_'+user.email,[]);
+$('orders').innerHTML=os.length?os.slice().reverse().map(o=>`<div class="order"><div class="row" style="padding:0"><b>${esc(o.id)}</b><span class="tag">${esc(o.status)}</span></div><small>${esc(o.date)}</small><div>${o.items.map(x=>esc(x.q+'x '+x.n)).join('<br>')}</div><b>${money(o.total)}</b></div>`).join(''):'<p class="hint">Você ainda não fez solicitações.</p>'}
+document.addEventListener('click',e=>{const t=e.target;
+if(t.dataset.add)change(t.dataset.add,1);if(t.dataset.inc)change(t.dataset.inc,1);if(t.dataset.dec)change(t.dataset.dec,-1);
+if(t.id==='checkout')checkout()});
+function checkout(){const items=Object.keys(cart).map(id=>{const i=ITEMS.find(x=>x.id===id);return i&&{n:i.n,q:cart[id],p:i.p}}).filter(Boolean);
+if(!items.length)return;const total=items.reduce((s,x)=>s+x.p*x.q,0);
+const o={id:'PG'+Date.now().toString(36).toUpperCase(),date:new Date().toLocaleString('pt-BR'),items,total,status:'Aguardando análise'};
+const os=ls.get('pg_orders_'+user.email,[]);os.push(o);ls.set('pg_orders_'+user.email,os);cart={};ls.set('pg_cart_'+user.email,cart);
+const txt=`Solicitação ${o.id} - Prime Go\nCliente: ${user.name}\nE-mail: ${user.email}${user.contact?'\nContato: '+user.contact:''}${user.trainer?'\nCódigo de treinador: '+user.trainer:''}\n\n`+items.map(x=>`${x.q}x ${x.n} - ${money(x.p*x.q)}`).join('\n')+`\n\nTotal estimado: ${money(total)}\nAguardo a análise e a resposta por e-mail.`;
+$('msg').value=txt;$('mail').href='mailto:'+CFG.EMAIL+'?subject='+encodeURIComponent('Solicitação '+o.id+' - Prime Go')+'&body='+encodeURIComponent(txt);
+$('dlg').showModal();render()}
+$('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('msg').value);$('copy').textContent='Copiado!'}catch(e){$('msg').select()}};
+$('close').onclick=()=>{$('dlg').close();$('copy').textContent='Copiar resumo'};
+const ct=[CFG.EMAIL&&'E-mail: '+CFG.EMAIL,CFG.PHONE&&'Telefone: '+CFG.PHONE].filter(Boolean).join('  •  ');if(ct){$('foot').textContent='Contato Prime Go — '+ct;$('foot').hidden=false}
+const s=ls.get('pg_session',null);if(s&&ls.get('pg_users',{})[s])start(s);
+</script></body></html>
